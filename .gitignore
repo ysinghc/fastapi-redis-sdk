@@ -1,0 +1,6 @@
+/tests/unit/.coverage
+/.coverage
+/.idea/
+/site/
+/bandit-report.json
+/coverage.xml

@@ -1,0 +1,194 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - 'main'
+    - '[0-9].[0-9]'
+  pull_request:
+    branches:
+      - 'main'
+      - '[0-9].[0-9]'
+  schedule:
+    - cron: '0 1 * * *' # nightly build
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@v2
+      with:
+        egress-policy: audit
+
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        version: "latest"
+
+    - name: Lint & format
+      run: uv run nox -s lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@v2
+      with:
+        egress-policy: audit
+
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        version: "latest"
+
+    - name: Type check
+      run: uv run nox -s typecheck
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@v2
+      with:
+        egress-policy: audit
+
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        version: "latest"
+
+    - name: Security scan
+      run: uv run nox -s security
+
+    - name: Upload security reports
+      uses: actions/upload-artifact@v7
+      if: always()
+      with:
+        name: security-reports
+        path: bandit-report.json
+        retention-days: 30
+
+  test-ubuntu:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+
+    services:
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@v2
+      with:
+        egress-policy: audit
+
+    - name: Checkout the project
+      uses: actions/checkout@v6
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        version: "latest"
+
+    - name: Run tests with coverage
+      run: uv run nox -s "tests-${{ matrix.python-version }}"
+      env:
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v6
+      if: matrix.python-version == '3.12'
+      with:
+        files: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+  test-other-os:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+
+    steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@v2
+      with:
+        egress-policy: audit
+
+    - name: Checkout the project
+      uses: actions/checkout@v6
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        version: "latest"
+
+    - name: Run tests (without Redis)
+      run: uv run nox -s "tests-${{ matrix.python-version }}"
+      env:
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, security, test-ubuntu, test-other-os]
+    steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@v2
+      with:
+        egress-policy: audit
+
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        version: "latest"
+
+    - name: Build package
+      run: uv build --sdist --wheel
+
+    - name: Check package
+      run: |
+        uv run --with twine twine check dist/*
+
+    - name: Test package installation
+      run: |
+        uv venv test-env
+        VIRTUAL_ENV=test-env uv pip install dist/*.whl
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: dist-files
+        path: dist/
+        retention-days: 7

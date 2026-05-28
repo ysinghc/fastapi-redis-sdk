@@ -1,0 +1,65 @@
+name: "Stale Issue Management"
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+env:
+  DAYS_BEFORE_STALE: 365
+  DAYS_BEFORE_CLOSE: 30
+  NEEDS_INFO_DAYS_BEFORE_STALE: 30
+  NEEDS_INFO_DAYS_BEFORE_CLOSE: 7
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v10
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          dry-run: true
+          days-before-stale: ${{ env.DAYS_BEFORE_STALE }}
+          days-before-close: ${{ env.DAYS_BEFORE_CLOSE }}
+          stale-issue-label: "stale"
+          stale-pr-label: "stale"
+          stale-issue-message: |
+            This issue has been automatically marked as stale due to inactivity.
+            It will be closed in 30 days if no further activity occurs.
+            If you believe this issue is still relevant, please add a comment to keep it open.
+          close-issue-message: |
+            This issue has been automatically closed due to inactivity.
+            If you believe this issue is still relevant, please reopen it or create a new issue with updated information.
+          exempt-issue-labels: 'no-stale,needs-information'
+          remove-stale-when-updated: true
+          days-before-pr-stale: ${{ env.DAYS_BEFORE_STALE }}
+          days-before-pr-close: ${{ env.DAYS_BEFORE_CLOSE }}
+          stale-pr-message: |
+            This pull request has been automatically marked as stale due to inactivity.
+            It will be closed in 30 days if no further activity occurs.
+          close-pr-message: |
+            This pull request has been automatically closed due to inactivity.
+            If you would like to continue this work, please reopen the PR or create a new one.
+          exempt-pr-labels: 'no-stale'
+
+  stale-needs-info:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v10
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          dry-run: true
+          days-before-stale: ${{ env.NEEDS_INFO_DAYS_BEFORE_STALE }}
+          days-before-close: ${{ env.NEEDS_INFO_DAYS_BEFORE_CLOSE }}
+          stale-issue-label: "stale"
+          only-issue-labels: 'needs-information'
+          stale-issue-message: |
+            This issue has been marked as stale because it requires additional information
+            that has not been provided for 30 days. It will be closed in 7 days if the
+            requested information is not provided.
+          close-issue-message: |
+            This issue has been closed because the requested information was not provided within the specified timeframe.
+            If you can provide the missing information, please reopen this issue or create a new one.
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          remove-stale-when-updated: true
+
