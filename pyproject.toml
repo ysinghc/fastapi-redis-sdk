@@ -112,13 +112,12 @@ markers = [
 asyncio_mode = "auto"
 strict_xfail = true
 timeout = 20
+# Promote warnings to errors only for code we own; upstream deprecations
+# (starlette, opentelemetry, redis-py, ...) are surfaced but never fail CI.
 filterwarnings = [
-    "error",
-    # redis-py / asyncio may GC connections after the event loop closes,
-    # surfacing as PytestUnraisableExceptionWarning on unrelated tests.
-    "ignore::pytest.PytestUnraisableExceptionWarning",
-    # opentelemetry uses deprecated importlib.metadata APIs on Python <3.12.
-    "ignore:SelectableGroups dict interface is deprecated:DeprecationWarning",
+    "default",
+    "error:::redis_fastapi",
+    "error:::redis_fastapi\\..*",
 ]
 
 [tool.coverage.run]

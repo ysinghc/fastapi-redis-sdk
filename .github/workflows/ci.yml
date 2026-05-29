@@ -121,7 +121,7 @@ jobs:
 
     - name: Upload coverage reports
       uses: codecov/codecov-action@v6
-      if: matrix.python-version == '3.12'
+      if: matrix.python-version == '3.14'
       with:
         files: ./coverage.xml
         flags: unittests

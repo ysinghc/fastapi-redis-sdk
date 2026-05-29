@@ -56,14 +56,14 @@ class TestAsyncDep:
 class TestBuildAsyncPoolKVMode:
     """Cover _PoolState.build_async_pool KV path."""
 
-    def test_kv_mode_creates_pool(self) -> None:
+    async def test_kv_mode_creates_pool(self) -> None:
         from redis.asyncio import ConnectionPool as AsyncConnectionPool
 
         s = RedisSettings(host="localhost", port=6379, db=0)
         with patch("redis_fastapi.deps.get_settings", return_value=s):
             pool = _PoolState.build_async_pool()
             assert isinstance(pool, AsyncConnectionPool)
-            pool.disconnect()
+            await pool.disconnect()
 
 
 @pytest.mark.unit
