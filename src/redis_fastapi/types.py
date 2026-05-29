@@ -1,4 +1,4 @@
-"""Shared types for redis-fastapi."""
+"""Shared types for fastapi-redis-sdk."""
 
 from __future__ import annotations
 

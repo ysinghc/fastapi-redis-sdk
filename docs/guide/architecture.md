@@ -1,6 +1,6 @@
 # Architecture
 
-This page covers the key architectural decisions behind redis-fastapi and the
+This page covers the key architectural decisions behind fastapi-redis-sdk and the
 reasoning that shaped them.
 
 ---
@@ -91,7 +91,7 @@ The builder methods are independent — `.caching()` does not require
 
 ## Async-first design and sync endpoint support
 
-redis-fastapi is **async-only at the transport layer** — the sole Redis
+fastapi-redis-sdk is **async-only at the transport layer** — the sole Redis
 connection pool is an `redis.asyncio` pool.  There is no sync `redis.Redis`
 pool.  This section explains why that works for both `async def` and plain
 `def` endpoints.
@@ -110,7 +110,7 @@ section).
 | `async def dependency(…)` | Main event loop | No |
 | `def dependency(…)` | Worker threadpool | Yes |
 
-All of redis-fastapi's DI factories (`cache()`, `cache_evict()`,
+All of fastapi-redis-sdk's DI factories (`cache()`, `cache_evict()`,
 `cache_put()`, `get_cache_backend()`) are `async def`.  They run on the
 event loop and use `await` for every Redis call — no thread is blocked.
 Sync endpoints that declare these as `Depends(…)` still work correctly:
@@ -194,7 +194,7 @@ See [Caching § Sync endpoint support](caching.md) for details.
 
 Many FastAPI caching libraries — most notably
 [fastapi-cache2](https://github.com/long2ice/fastapi-cache) — use a
-`@cache` decorator that wraps the endpoint function.  redis-fastapi
+`@cache` decorator that wraps the endpoint function.  fastapi-redis-sdk
 **deliberately avoids this pattern** and uses FastAPI's native dependency
 injection (`Depends()`) instead.  The decorator approach has five concrete
 problems in FastAPI:
@@ -299,7 +299,7 @@ fields;
 
 ## Telemetry
 
-redis-fastapi supports [OpenTelemetry](https://opentelemetry.io/) for
+fastapi-redis-sdk supports [OpenTelemetry](https://opentelemetry.io/) for
 observability.  Instrumentation is split into three independent layers:
 
 ```mermaid
@@ -313,7 +313,7 @@ block-beta
     block:L2:1
         columns 2
         l2["Layer 2 — Cache operation spans + metrics"]
-        l2src["redis-fastapi OTel"]
+        l2src["fastapi-redis-sdk OTel"]
     end
     block:L3:1
         columns 2
@@ -350,7 +350,7 @@ Install `opentelemetry-instrumentation-fastapi` and call
 
 ### Layer 2 — Cache operations
 
-This is what redis-fastapi adds.  Enable with the builder or an environment
+This is what fastapi-redis-sdk adds.  Enable with the builder or an environment
 variable:
 
 ```python
@@ -361,7 +361,7 @@ FastAPIRedis(app).lifespan().caching().otel()   # builder
 export REDIS_OTEL_ENABLED=true           # env var
 ```
 
-Requires `pip install redis-fastapi[otel]`.
+Requires `pip install fastapi-redis-sdk[otel]`.
 
 **Spans** — one per cache operation, named following the
 [OTel span naming guidelines](https://opentelemetry.io/docs/specs/semconv/general/how-to-define-semantic-conventions/#naming-pattern)

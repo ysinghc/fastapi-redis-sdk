@@ -109,7 +109,7 @@ class TestClientSetInfo:
     def test_lib_version_reported_in_lib_name(
         self, real_redis: sync_redis.Redis
     ) -> None:
-        """LIB-NAME includes the upstream driver version (e.g. redis-fastapi_v0.1.0)."""
+        """LIB-NAME includes the upstream driver version (e.g. fastapi-redis-sdk_v0.1.0)."""
         app = FastAPI()
         FastAPIRedis(app).lifespan()
 
@@ -122,7 +122,7 @@ class TestClientSetInfo:
             client.get("/touch")
 
             # DriverInfo embeds the upstream version in LIB-NAME, not LIB-VER.
-            # e.g. "redis-py(redis-fastapi_v0.1.0)"
+            # e.g. "redis-py(fastapi-redis-sdk_v0.1.0)"
             clients = real_redis.client_list()
             lib_names = [c.get("lib-name", "") for c in clients]
             expected = f"{LIB_NAME}_v{LIB_VERSION}"

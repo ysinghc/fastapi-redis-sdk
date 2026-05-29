@@ -2,7 +2,7 @@
 
 ## Summary
 
-redis-fastapi is benchmarked against popular caching libraries
+fastapi-redis-sdk is benchmarked against popular caching libraries
 on identical workloads. All numbers are **median latency in microseconds (µs)**
 — lower is better.
 
@@ -10,14 +10,14 @@ on identical workloads. All numbers are **median latency in microseconds (µs)**
 
 - On **small payloads** (~550 B), all three libraries perform within 10% of each
   other (~650–700 µs per HIT). There is no clear winner.
-- On **large payloads** (~50 KB), **redis-fastapi is 5.6× faster** than
+- On **large payloads** (~50 KB), **fastapi-redis-sdk is 5.6× faster** than
   fastapi-cache2 on cache HITs (1,165 µs vs 6,530 µs), thanks to its
   raw-bytes approach that skips re-serialization entirely.
 - fastapi-cache2 is **2.8× faster** on write-through because its decorator
-  writes the return value directly, avoiding redis-fastapi's response-capture
+  writes the return value directly, avoiding fastapi-redis-sdk's response-capture
   middleware overhead.
-- cashews is **5.5× slower** than redis-fastapi on eviction-group eviction due to
-  Python-side `SCAN` round-trips vs redis-fastapi's server-side Lua script.
+- cashews is **5.5× slower** than fastapi-redis-sdk on eviction-group eviction due to
+  Python-side `SCAN` round-trips vs fastapi-redis-sdk's server-side Lua script.
 
 **Environment:** Python 3.14, Redis 8, macOS Apple Silicon, localhost.
 Full methodology is described at the bottom of this page.
@@ -26,35 +26,35 @@ Full methodology is described at the bottom of this page.
 
 ## Caching
 
-Compared libraries: **redis-fastapi** (dev), **fastapi-cache2** 0.2.2,
+Compared libraries: **fastapi-redis-sdk** (dev), **fastapi-cache2** 0.2.2,
 **cashews** 7.5.0.
 
 ### Small payload (~550 bytes)
 
-| Scenario                    | redis-fastapi | fastapi-cache2 |      cashews |
-|-----------------------------|--------------:|---------------:|-------------:|
-| Cache HIT                   |    **643 µs** |        662 µs  |     696 µs   |
-| Cache MISS                  |  **994 µs**   |       1,008 µs |     1,188 µs |
-| ETag / 304                  |        703 µs |     **672 µs** |        *n/a* |
-| Write-through               |        700 µs |     **254 µs** |       619 µs |
-| Single-key eviction         |      1,867 µs |       1,367 µs | **1,310 µs** |
-| Group eviction (1 000 keys) |      2,250 µs |     **728 µs** |    12,319 µs |
+| Scenario                    | fastapi-redis-sdk | fastapi-cache2 |      cashews |
+|-----------------------------|------------------:|---------------:|-------------:|
+| Cache HIT                   |      **643 µs**   |        662 µs  |     696 µs   |
+| Cache MISS                  |        **994 µs** |       1,008 µs |     1,188 µs |
+| ETag / 304                  |            703 µs |     **672 µs** |        *n/a* |
+| Write-through               |            700 µs |     **254 µs** |       619 µs |
+| Single-key eviction         |          1,867 µs |       1,367 µs | **1,310 µs** |
+| Group eviction (1 000 keys) |          2,250 µs |     **728 µs** |    12,319 µs |
 
 ### Large payload (~50 KB)
 
-| Scenario | redis-fastapi | fastapi-cache2 | cashews |
-|---|---:|---:|---:|
-| Cache HIT | **1,165 µs** | 6,530 µs | 1,909 µs |
-| Cache MISS | 3,982 µs | 7,129 µs | **2,802 µs** |
+| Scenario   | fastapi-redis-sdk | fastapi-cache2 |      cashews |
+|------------|------------------:|---------------:|-------------:|
+| Cache HIT  |    **1,165 µs**   |     6,530 µs   |    1,909 µs  |
+| Cache MISS |          3,982 µs |       7,129 µs | **2,802 µs** |
 
 ### Standout results
 
-#### 🏆 Large-payload HIT — redis-fastapi is 5.6× faster than fastapi-cache2
+#### 🏆 Large-payload HIT — fastapi-redis-sdk is 5.6× faster than fastapi-cache2
 
 ```
-redis-fastapi       1,165 µs
-cashews             1,909 µs   (1.6× slower)
-fastapi-cache2      6,530 µs   (5.6× slower)
+fastapi-redis-sdk       1,165 µs
+cashews                 1,909 µs   (1.6× slower)
+fastapi-cache2          6,530 µs   (5.6× slower)
 ```
 
 fastapi-cache2's `JsonCoder.decode` runs `json.loads()` with a custom
@@ -62,44 +62,44 @@ fastapi-cache2's `JsonCoder.decode` runs `json.loads()` with a custom
 product objects that hook fires 1,000+ times. cashews uses pickle — faster
 than JSON but still slower than raw bytes.
 
-redis-fastapi stores the JSON body as raw bytes and returns it **without
+fastapi-redis-sdk stores the JSON body as raw bytes and returns it **without
 re-parsing or re-serializing** on HIT, making coder overhead effectively
 zero regardless of payload size.
 
 #### ⚠️ Write-through — fastapi-cache2 is 2.8× faster
 
 ```
-fastapi-cache2      254 µs
-cashews             619 µs   (2.4× slower)
-redis-fastapi       700 µs   (2.8× slower)
+fastapi-cache2          254 µs
+cashews                 619 µs   (2.4× slower)
+fastapi-redis-sdk       700 µs   (2.8× slower)
 ```
 
 fastapi-cache2's `@cache` decorator caches the return value directly — one
-function call, one Redis write. redis-fastapi's `cache_put()` goes through
+function call, one Redis write. fastapi-redis-sdk's `cache_put()` goes through
 the full DI pipeline and response-capture middleware (buffer the ASGI
 response, serialize, write to Redis).
 
 #### ⚠️ Group eviction — cashews is 5.5× slower
 
 ```
-fastapi-cache2        728 µs
-redis-fastapi       2,250 µs   (3.1× slower)
-cashews            12,319 µs   (5.5× slower than redis-fastapi)
+fastapi-cache2           728 µs
+fastapi-redis-sdk      2,250 µs   (3.1× slower)
+cashews               12,319 µs   (5.5× slower than fastapi-redis-sdk)
 ```
 
 fastapi-cache2 uses a Lua script with `KEYS` (fast but
-[discouraged in production](https://redis.io/commands/keys/)). redis-fastapi
+[discouraged in production](https://redis.io/commands/keys/)). fastapi-redis-sdk
 uses a Lua script with `SCAN` + `UNLINK` (production-safe, slightly slower).
 cashews uses Python-side `scan_iter` + `delete_match` — multiple network
 round-trips per SCAN batch.
 
 ### Default coders
 
-| Library | Default coder | Approach |
-|---|---|---|
-| redis-fastapi | raw bytes | Stores JSON body as-is; no decode on HIT |
-| fastapi-cache2 | `JsonCoder` | `json.dumps` + `jsonable_encoder` / `json.loads(object_hook=...)` |
-| cashews | pickle | `pickle.dumps()` / `pickle.loads()` |
+| Library            | Default coder | Approach                                                          |
+|--------------------|---------------|-------------------------------------------------------------------|
+| fastapi-redis-sdk  | raw bytes     | Stores JSON body as-is; no decode on HIT                          |
+| fastapi-cache2     | `JsonCoder`   | `json.dumps` + `jsonable_encoder` / `json.loads(object_hook=...)` |
+| cashews            | pickle        | `pickle.dumps()` / `pickle.loads()`                               |
 
 ---
 
@@ -114,13 +114,13 @@ All latency-scaled benchmarks use a TCP proxy
 (`performance/redis_latency_proxy.py`) that injects configurable round-trip
 delay between the benchmark app and Redis.
 
-### Caching — redis-fastapi HIT/MISS by added RTT
+### Caching — fastapi-redis-sdk HIT/MISS by added RTT
 
-| Added RTT | Cache HIT | Cache MISS |
-|---|---:|---:|
-| **0 ms** (loopback) | 690 µs | 1,101 µs |
-| **+1 ms** | 2,496 µs | 5,217 µs |
-| **+2 ms** | 3,987 µs | 7,502 µs |
+| Added RTT            | Cache HIT | Cache MISS |
+|----------------------|----------:|-----------:|
+| **0 ms**  (loopback) |  690 µs   |  1,101 µs  |
+| **+1 ms**            |  2,496 µs |   5,217 µs |
+| **+2 ms**            |  3,987 µs |   7,502 µs |
 
 Each millisecond of network RTT adds **~1,650 µs to HIT** and **~3,200 µs
 to MISS**. The HIT path performs a pipelined `GET` + `TTL` (one round-trip)
@@ -145,15 +145,15 @@ worth considering for latency-sensitive endpoints.
 
 ## Methodology
 
-| Parameter | Value |
-|---|---|
-| Python | 3.14.3 |
-| Redis | 8.0+ (Docker) |
-| OS | macOS (Apple Silicon, M3 Max) |
-| Benchmark tool | pytest-benchmark 5.2.3, pedantic mode |
-| Rounds | 500 (50 for eviction-group eviction) |
-| Iterations per round | 20 |
-| Warmup rounds | 20 |
+| Parameter            | Value                                 |
+|----------------------|---------------------------------------|
+| Python               | 3.14.3                                |
+| Redis                | 8.0+ (Docker)                         |
+| OS                   | macOS (Apple Silicon, M3 Max)         |
+| Benchmark tool       | pytest-benchmark 5.2.3, pedantic mode |
+| Rounds               | 500 (50 for eviction-group eviction)  |
+| Iterations per round | 20                                    |
+| Warmup rounds        | 20                                    |
 
 All benchmarks use `TestClient` (synchronous), which runs the ASGI app
 in-process. This measures the **full request-response cycle** including

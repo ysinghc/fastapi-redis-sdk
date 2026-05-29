@@ -35,8 +35,8 @@ from redis_fastapi import (
 from redis_fastapi.config import RedisSettings
 
 app = FastAPI(
-    title="redis-fastapi demo",
-    description="Minimal app showcasing redis-fastapi on FastAPI Cloud.",
+    title="fastapi-redis-sdk demo",
+    description="Minimal app showcasing fastapi-redis-sdk on FastAPI Cloud.",
 )
 FastAPIRedis(app).lifespan().caching()
 
@@ -44,7 +44,7 @@ FastAPIRedis(app).lifespan().caching()
 @app.get("/")
 async def root() -> dict[str, str]:
     """Health check — no Redis needed."""
-    return {"status": "ok", "library": "redis-fastapi"}
+    return {"status": "ok", "library": "fastapi-redis-sdk"}
 
 
 @app.get("/ping")

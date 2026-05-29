@@ -1,4 +1,4 @@
-"""Shared test fixtures for redis-fastapi."""
+"""Shared test fixtures for fastapi-redis-sdk."""
 
 import os
 import sys

@@ -103,7 +103,7 @@ from redis_fastapi import enable_telemetry
 
 Activate OpenTelemetry instrumentation for cache operations.
 
-Requires `pip install redis-fastapi[otel]`.  If the `opentelemetry` packages
+Requires `pip install fastapi-redis-sdk[otel]`.  If the `opentelemetry` packages
 are not installed, a warning is logged and telemetry remains disabled.
 
 Safe to call multiple times — subsequent calls are no-ops.

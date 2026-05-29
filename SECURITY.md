@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-redis-fastapi is generally backwards compatible with very few exceptions, so we recommend users to always use the latest version to experience stability, performance and security.
+fastapi-redis-sdk is generally backwards compatible with very few exceptions, so we recommend users to always use the latest version to experience stability, performance and security.
 
 ## Reporting a Vulnerability
 

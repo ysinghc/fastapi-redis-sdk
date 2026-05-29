@@ -132,7 +132,7 @@ jobs:
     needs: [validate-release, security-scan, test]
     environment:
       name: ${{ github.event.inputs.environment || 'pypi' }}
-      url: ${{ github.event.inputs.environment == 'testpypi' && 'https://test.pypi.org/p/redis-fastapi' || 'https://pypi.org/p/redis-fastapi' }}
+      url: ${{ github.event.inputs.environment == 'testpypi' && 'https://test.pypi.org/p/fastapi-redis-sdk' || 'https://pypi.org/p/fastapi-redis-sdk' }}
     permissions:
       id-token: write
       contents: read
@@ -233,16 +233,16 @@ jobs:
     - name: Success notification
       run: |
         if [[ "${{ inputs.dry_run }}" == "true" ]]; then
-          echo "DRY RUN COMPLETED - redis-fastapi ready for release!"
+          echo "DRY RUN COMPLETED - fastapi-redis-sdk ready for release!"
           echo "Package built successfully but not published"
         else
-          echo "Successfully released redis-fastapi!"
+          echo "Successfully released fastapi-redis-sdk!"
           echo ""
           echo "PyPI Package:"
           if [[ "${{ github.event.inputs.environment }}" == "testpypi" ]]; then
-            echo "  https://test.pypi.org/project/redis-fastapi/"
+            echo "  https://test.pypi.org/project/fastapi-redis-sdk/"
           else
-            echo "  https://pypi.org/project/redis-fastapi/"
+            echo "  https://pypi.org/project/fastapi-redis-sdk/"
           fi
         fi
 

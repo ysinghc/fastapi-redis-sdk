@@ -3,19 +3,19 @@
 === "pip"
 
     ```bash
-    pip install redis-fastapi
+    pip install fastapi-redis-sdk
     ```
 
 === "uv"
 
     ```bash
-    uv add redis-fastapi
+    uv add fastapi-redis-sdk
     ```
 
 === "poetry"
 
     ```bash
-    poetry add redis-fastapi
+    poetry add fastapi-redis-sdk
     ```
 
 ## Requirements

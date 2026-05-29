@@ -1,6 +1,6 @@
 # Caching
 
-redis-fastapi provides two caching patterns. This guide covers each one,
+fastapi-redis-sdk provides two caching patterns. This guide covers each one,
 starting with the most common.
 
 | Pattern                                     | Best for                                                                           |
@@ -600,7 +600,7 @@ Choose a value that matches your data's volatility:
 
 ## Further reading
 
-### redis-fastapi documentation
+### fastapi-redis-sdk documentation
 
 - [Configuration Guide](configuration.md) - Redis connection settings
 - [API Reference](../api/configuration.md) - Full API documentation

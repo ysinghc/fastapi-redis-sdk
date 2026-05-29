@@ -1,4 +1,4 @@
-"""Builder for redis-fastapi app setup.
+"""Builder for fastapi-redis-sdk app setup.
 
 Provides a fluent API for configuring Redis integration with FastAPI::
 
@@ -28,7 +28,7 @@ if TYPE_CHECKING:
 
 
 class FastAPIRedis:
-    """Fluent builder for redis-fastapi app setup.
+    """Fluent builder for fastapi-redis-sdk app setup.
 
     Usage::
 
@@ -104,7 +104,7 @@ class FastAPIRedis:
         ``FastAPIInstrumentor`` (HTTP spans) and redis-py native OTel
         (command spans).
 
-        Requires ``pip install redis-fastapi[otel]``.
+        Requires ``pip install fastapi-redis-sdk[otel]``.
         """
         from redis_fastapi.telemetry import enable_telemetry  # noqa: PLC0415
 

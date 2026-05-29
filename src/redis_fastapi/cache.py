@@ -1,4 +1,4 @@
-"""DI-based caching for redis-fastapi.
+"""DI-based caching for fastapi-redis-sdk.
 
 ``cache()``, ``cache_evict()``, and ``cache_put()`` are **dependency factories**
 that return callables suitable for ``Depends()``.

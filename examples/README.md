@@ -1,7 +1,7 @@
-# redis-fastapi demo app
+# fastapi-redis-sdk demo app
 
 Minimal FastAPI application that showcases every caching pattern provided by
-`redis-fastapi`. Designed for one-click deployment to
+`fastapi-redis-sdk`. Designed for one-click deployment to
 [FastAPI Cloud](https://fastapicloud.com/).
 
 ## Prerequisites
@@ -55,14 +55,14 @@ fastapi cloud env set REDIS_DEFAULT_TTL 300
 Replace `BASE` with your deployment URL or `http://localhost:8000`.
 
 ```bash
-BASE=https://redis-fastapi-4eb7c8a2.fastapicloud.dev
+BASE=https://fastapi-redis-sdk-4eb7c8a2.fastapicloud.dev
 ```
 
 ### 1. Health check
 
 ```bash
 curl $BASE/
-# {"status":"ok","library":"redis-fastapi"}
+# {"status":"ok","library":"fastapi-redis-sdk"}
 ```
 
 ### 2. Redis connectivity

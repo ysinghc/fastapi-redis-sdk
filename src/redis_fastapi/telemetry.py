@@ -1,4 +1,4 @@
-"""OpenTelemetry instrumentation for redis-fastapi cache operations.
+"""OpenTelemetry instrumentation for fastapi-redis-sdk cache operations.
 
 Provides spans and metrics for cache(), cache_evict(), cache_put(),
 and CacheBackend operations.  All OTel imports are guarded - when the
@@ -11,7 +11,7 @@ Enable via::
 
 Or by setting ``REDIS_OTEL_ENABLED=true``.
 
-Requires: ``pip install redis-fastapi[otel]``
+Requires: ``pip install fastapi-redis-sdk[otel]``
 """
 
 from __future__ import annotations
@@ -25,8 +25,8 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
-TRACER_NAME = "redis-fastapi"
-METER_NAME = "redis-fastapi"
+TRACER_NAME = "fastapi-redis-sdk"
+METER_NAME = "fastapi-redis-sdk"
 
 
 # ---------------------------------------------------------------------------
@@ -77,7 +77,7 @@ def enable_telemetry() -> None:
         logger.warning(
             "opentelemetry-api / opentelemetry-sdk not installed; "
             "cache telemetry will be disabled.  "
-            "Install with: pip install redis-fastapi[otel]"
+            "Install with: pip install fastapi-redis-sdk[otel]"
         )
         return
 
@@ -108,7 +108,7 @@ def enable_telemetry() -> None:
     )
 
     _state.enabled = True
-    logger.info("redis-fastapi OpenTelemetry instrumentation enabled")
+    logger.info("fastapi-redis-sdk OpenTelemetry instrumentation enabled")
 
 
 def disable_telemetry() -> None:

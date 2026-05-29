@@ -286,7 +286,7 @@ REDIS_MAX_CONNECTIONS=100
 [Redis Cloud integration](https://fastapicloud.com/docs/integrations/redis-integration/).
 When you connect a Redis Cloud database to your app, FastAPI Cloud automatically
 injects the connection string as the `REDIS_URL` environment variable — which is
-exactly what `redis-fastapi` reads by default. No extra configuration is needed:
+exactly what `fastapi-redis-sdk` reads by default. No extra configuration is needed:
 
 1. In the FastAPI Cloud dashboard, go to your app's **Storage** tab.
 2. Connect (or create) a Redis Cloud database.
@@ -336,14 +336,14 @@ cache_prefix = settings.pattern_prefix("cache")
 
 ## OpenTelemetry
 
-redis-fastapi can emit spans and metrics for every cache operation via
+fastapi-redis-sdk can emit spans and metrics for every cache operation via
 [OpenTelemetry](https://opentelemetry.io/).  Telemetry is **opt-in** — when
 disabled (the default) all instrumentation is a zero-cost no-op.
 
 ### Install the optional dependency
 
 ```bash
-pip install redis-fastapi[otel]
+pip install fastapi-redis-sdk[otel]
 ```
 
 ### Enable via the builder (recommended)
@@ -367,7 +367,7 @@ telemetry module is activated automatically at startup.
 
 ### redis-py native OTel
 
-redis-fastapi instruments the **cache layer** (hit/miss, write, eviction).  If
+fastapi-redis-sdk instruments the **cache layer** (hit/miss, write, eviction).  If
 you also want low-level **Redis command** spans and connection-pool metrics, enable
 the redis-py native integration:
 

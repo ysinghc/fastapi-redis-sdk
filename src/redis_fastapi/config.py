@@ -1,4 +1,4 @@
-"""Configuration for redis-fastapi using Pydantic Settings.
+"""Configuration for fastapi-redis-sdk using Pydantic Settings.
 
 Following FastAPI's recommended pattern for settings:
 https://fastapi.tiangolo.com/advanced/settings
@@ -15,9 +15,9 @@ from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from redis.driver_info import DriverInfo
 
-LIB_NAME: str = "redis-fastapi"
+LIB_NAME: str = "fastapi-redis-sdk"
 try:
-    LIB_VERSION: str = version("redis-fastapi")
+    LIB_VERSION: str = version("fastapi-redis-sdk")
 except PackageNotFoundError:
     # Package not installed (e.g. running from source via sys.path).
     from redis_fastapi import __version__ as LIB_VERSION

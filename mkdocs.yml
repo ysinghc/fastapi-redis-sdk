@@ -91,7 +91,7 @@ nav:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/redis-developer/redis-fastapi
+      link: https://github.com/redis/fastapi-redis-sdk
   version:
     provider: mike
 

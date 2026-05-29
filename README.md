@@ -2,20 +2,20 @@
 
 Idiomatic Redis integration for FastAPI - connection management and DI-based caching with automatic key consistency.
 
-[![Integration](https://github.com/redis-developer/redis-fastapi/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/redis-developer/redis-fastapi/actions/workflows/ci.yml)
-[![PyPI - Version](https://img.shields.io/pypi/v/redis-fastapi)](https://pypi.org/project/redis-fastapi/)
+[![Integration](https://github.com/redis/fastapi-redis-sdk/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/redis/fastapi-redis-sdk/actions/workflows/ci.yml)
+[![PyPI - Version](https://img.shields.io/pypi/v/fastapi-redis-sdk)](https://pypi.org/project/fastapi-redis-sdk/)
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue&logo=redis)](https://www.python.org/downloads/)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v0.json)](https://astral.sh/ruff)
-[![codecov](https://codecov.io/gh/redis-developer/redis-fastapi/branch/master/graph/badge.svg?token=yenl5fzxxr)](https://codecov.io/gh/redis/redis-fastapi)
+[![codecov](https://codecov.io/gh/redis/fastapi-redis-sdk/branch/main/graph/badge.svg?token=yenl5fzxxr)](https://codecov.io/gh/redis/fastapi-redis-sdk)
 
 
 [![Discord](https://img.shields.io/discord/697882427875393627.svg?style=social&logo=discord)](https://discord.gg/redis)
 [![Twitch](https://img.shields.io/twitch/status/redisinc?style=social)](https://www.twitch.tv/redisinc)
 [![YouTube](https://img.shields.io/youtube/channel/views/UCD78lHSwYqMlyetR0_P4Vig?style=social)](https://www.youtube.com/redisinc)
 [![Twitter](https://img.shields.io/twitter/follow/redisinc?style=social)](https://twitter.com/redisinc)
-[![Stack Exchange questions](https://img.shields.io/stackexchange/stackoverflow/t/redis-fastapi?style=social&logo=stackoverflow&label=Stackoverflow)](https://stackoverflow.com/questions/tagged/redis-fastapi)
+[![Stack Exchange questions](https://img.shields.io/stackexchange/stackoverflow/t/fastapi-redis-sdk?style=social&logo=stackoverflow&label=Stackoverflow)](https://stackoverflow.com/questions/tagged/fastapi-redis-sdk)
 
 ### Features
 
@@ -38,7 +38,7 @@ Idiomatic Redis integration for FastAPI - connection management and DI-based cac
 ## Installation
 
 ```bash
-pip install redis-fastapi
+pip install fastapi-redis-sdk
 ```
 
 ## Quick Start

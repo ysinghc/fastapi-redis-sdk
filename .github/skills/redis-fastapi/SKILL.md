@@ -1,15 +1,15 @@
 ---
-name: redis-fastapi
+name: fastapi-redis-sdk
 description: >
-  redis-fastapi development skill. Use when writing code, tests, or configuration
-  for the redis-fastapi library — the official Redis integration for FastAPI.
+  fastapi-redis-sdk development skill. Use when writing code, tests, or configuration
+  for the fastapi-redis-sdk library — the official Redis integration for FastAPI.
   Covers project setup (uv + nox), DI-based caching patterns, connection
   lifecycle, async/sync endpoints, testing conventions, and CI workflows.
   Do NOT use for general Redis or FastAPI questions unrelated to this library.
 license: MIT
 ---
 
-# redis-fastapi
+# fastapi-redis-sdk
 
 Official Redis integration for FastAPI — connection management and DI-based
 caching with automatic key consistency.
@@ -141,7 +141,7 @@ Three independent OTel layers (each opt-in):
 
 1. **HTTP spans** — `opentelemetry-instrumentation-fastapi` (external).
 2. **Cache operation spans + metrics** — `FastAPIRedis(app)...otel()` or
-   `REDIS_OTEL_ENABLED=true`. Install `redis-fastapi[otel]`.
+   `REDIS_OTEL_ENABLED=true`. Install `fastapi-redis-sdk[otel]`.
 3. **Redis command spans** — `REDIS_OTEL_REDIS_ENABLED=true` or
    `opentelemetry-instrumentation-redis` (not both).
 

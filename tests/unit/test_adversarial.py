@@ -1,4 +1,4 @@
-"""Adversarial tests for redis-fastapi edge cases and robustness.
+"""Adversarial tests for fastapi-redis-sdk edge cases and robustness.
 
 Covers: non-2xx caching, key injection, empty bodies, streaming,
 oversized responses, TTL edge cases, coder failures, settings cache,

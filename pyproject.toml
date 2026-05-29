@@ -1,5 +1,5 @@
 [project]
-name = "redis-fastapi"
+name = "fastapi-redis-sdk"
 version = "0.1.0"
 description = "The official Redis integration with FastAPI"
 readme = "README.md"
@@ -41,9 +41,9 @@ otel = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/redis-developer/redis-fastapi"
-Repository = "https://github.com/redis-developer/redis-fastapi"
-Issues = "https://github.com/redis-developer/redis-fastapi/issues"
+Homepage = "https://github.com/redis/fastapi-redis-sdk"
+Repository = "https://github.com/redis/fastapi-redis-sdk"
+Issues = "https://github.com/redis/fastapi-redis-sdk/issues"
 
 [build-system]
 requires = ["uv_build>=0.8.3,<0.12.0"]

@@ -1,4 +1,4 @@
-"""redis-fastapi - The official Redis integration with FastAPI."""
+"""fastapi-redis-sdk - The official Redis integration with FastAPI."""
 
 __version__ = "0.1.0"
 
